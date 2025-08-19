@@ -2127,7 +2127,8 @@ public class DeviceProfile {
      * the hotseat is on the bottom row.
      */
     public boolean isVerticalBarLayout() {
-        return isLandscape && transposeLayoutWithOrientation;
+        // Force vertical hotseat layout for writing tablet UI
+        return true;
     }
 
     /**

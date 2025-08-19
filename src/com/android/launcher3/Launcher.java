@@ -2355,6 +2355,12 @@ public class Launcher extends StatefulActivity<LauncherState>
         for (Pair<ItemInfo, View> e : shortcuts) {
             final ItemInfo item = e.first;
 
+            // For writing tablet UI, skip adding apps to desktop workspace
+            // Only allow hotseat items and other containers
+            if (item.container == LauncherSettings.Favorites.CONTAINER_DESKTOP) {
+                continue;
+            }
+
             // Remove colliding items.
             CellPos presenterPos = getCellPosMapper().mapModelToPresenter(item);
             if (item.container == CONTAINER_DESKTOP) {
