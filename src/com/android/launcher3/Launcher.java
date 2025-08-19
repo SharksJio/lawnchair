@@ -288,6 +288,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import app.lawnchair.LawnchairApp;
+import app.lawnchair.preferences2.PreferenceManager2;
+import com.patrykmichalik.opto.core.PreferenceExtensionsKt;
 
 /**
  * Default launcher application.
@@ -2357,8 +2359,14 @@ public class Launcher extends StatefulActivity<LauncherState>
 
             // For writing tablet UI, skip adding apps to desktop workspace
             // Only allow hotseat items and other containers
-            if (item.container == LauncherSettings.Favorites.CONTAINER_DESKTOP) {
-                continue;
+            try {
+                PreferenceManager2 prefs = PreferenceManager2.INSTANCE.get(this);
+                boolean writingTabletMode = PreferenceExtensionsKt.firstBlocking(prefs.getWritingTabletMode());
+                if (writingTabletMode && item.container == LauncherSettings.Favorites.CONTAINER_DESKTOP) {
+                    continue;
+                }
+            } catch (Exception ex) {
+                // Fallback to normal behavior if preference access fails
             }
 
             // Remove colliding items.

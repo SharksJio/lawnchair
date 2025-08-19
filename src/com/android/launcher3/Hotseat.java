@@ -150,8 +150,11 @@ public class Hotseat extends CellLayout implements Insettable {
         boolean bubbleBarEnabled = activityContext.isBubbleBarEnabled();
         boolean hasBubbles = activityContext.hasBubbles();
         removeAllViewsInLayout();
-        // Force vertical hotseat for writing tablet UI
-        mHasVerticalHotseat = true;
+        
+        // Check if writing tablet mode is enabled
+        boolean writingTabletMode = PreferenceExtensionsKt.firstBlocking(preferenceManager2.getWritingTabletMode());
+        mHasVerticalHotseat = writingTabletMode ? true : hasVerticalHotseat;
+        
         DeviceProfile dp = mActivity.getDeviceProfile();
 
         if (bubbleBarEnabled) {
@@ -178,11 +181,18 @@ public class Hotseat extends CellLayout implements Insettable {
         }
 
         resetCellSize(dp);
-        // Always use vertical hotseat layout for writing tablet UI
-        setGridSize(1, dp.numShownHotseatIcons);
+        // Use vertical hotseat layout for writing tablet UI or normal logic
+        boolean writingTabletMode = PreferenceExtensionsKt.firstBlocking(preferenceManager2.getWritingTabletMode());
+        if (writingTabletMode || mHasVerticalHotseat) {
+            setGridSize(1, dp.numShownHotseatIcons);
+        } else {
+            setGridSize(dp.numShownHotseatIcons, 1);
+        }
         
         // Add app tray shortcut for writing tablet UI
-        addAppTrayShortcut();
+        if (writingTabletMode) {
+            addAppTrayShortcut();
+        }
     }
 
     /**

@@ -204,6 +204,11 @@ class PreferenceManager2 private constructor(private val context: Context) :
         defaultValue = context.resources.getBoolean(R.bool.config_default_themed_hotseat_qsb),
     )
 
+    val writingTabletMode = preference(
+        key = booleanPreferencesKey(name = "writing_tablet_mode"),
+        defaultValue = false,
+    )
+
     val isHotseatEnabled = preference(
         key = booleanPreferencesKey(name = "pref_show_hotseat"),
         defaultValue = context.resources.getBoolean(R.bool.config_default_show_hotseat),
