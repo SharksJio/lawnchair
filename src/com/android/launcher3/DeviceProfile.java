@@ -2127,18 +2127,9 @@ public class DeviceProfile {
      * the hotseat is on the bottom row.
      */
     public boolean isVerticalBarLayout() {
-        // Check if writing tablet mode is enabled
-        try {
-            Context context = ActivityContext.lookupContext(this.getClass()).getApplicationContext();
-            PreferenceManager2 prefs = PreferenceManager2.INSTANCE.get(context);
-            boolean writingTabletMode = PreferenceExtensionsKt.firstBlocking(prefs.getWritingTabletMode());
-            if (writingTabletMode) {
-                return true;
-            }
-        } catch (Exception e) {
-            // Fallback to default behavior if preference access fails
-        }
-        return isLandscape && transposeLayoutWithOrientation;
+        // Force vertical hotseat layout for writing tablet UI
+        // This will be controlled by preferences in the Hotseat class
+        return true;
     }
 
     /**
