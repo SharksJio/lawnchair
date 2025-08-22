@@ -2127,7 +2127,8 @@ public class DeviceProfile {
      * the hotseat is on the bottom row.
      */
     public boolean isVerticalBarLayout() {
-        return isLandscape && transposeLayoutWithOrientation;
+        // Always return true to keep hotseat on left vertical column
+        return true;
     }
 
     /**
@@ -2135,21 +2136,13 @@ public class DeviceProfile {
      * previous value.
      */
     public boolean updateIsSeascape(Context context) {
-        if (isVerticalBarLayout()) {
-            boolean isSeascape = DisplayController.INSTANCE.get(context)
-                    .getInfo().rotation == Surface.ROTATION_270;
-            if (mIsSeascape != isSeascape) {
-                mIsSeascape = isSeascape;
-                // Hotseat changing sides requires updating workspace left/right paddings
-                updateWorkspacePadding();
-                return true;
-            }
-        }
+        // Always keep hotseat on left side, so no need to update seascape state
         return false;
     }
 
     public boolean isSeascape() {
-        return isVerticalBarLayout() && mIsSeascape;
+        // Always return true to keep hotseat on left side
+        return true;
     }
 
     public boolean shouldFadeAdjacentWorkspaceScreens() {
