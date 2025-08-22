@@ -148,7 +148,11 @@ public class Hotseat extends CellLayout implements Insettable {
         boolean bubbleBarEnabled = activityContext.isBubbleBarEnabled();
         boolean hasBubbles = activityContext.hasBubbles();
         removeAllViewsInLayout();
-        mHasVerticalHotseat = hasVerticalHotseat;
+        
+        // Check if writing tablet mode is enabled
+        boolean writingTabletMode = PreferenceExtensionsKt.firstBlocking(preferenceManager2.getWritingTabletMode());
+        mHasVerticalHotseat = writingTabletMode ? true : hasVerticalHotseat;
+        
         DeviceProfile dp = mActivity.getDeviceProfile();
 
         if (bubbleBarEnabled) {
@@ -175,10 +179,17 @@ public class Hotseat extends CellLayout implements Insettable {
         }
 
         resetCellSize(dp);
-        if (hasVerticalHotseat) {
+        // Use vertical hotseat layout for writing tablet UI or normal logic
+        boolean writingTabletMode = PreferenceExtensionsKt.firstBlocking(preferenceManager2.getWritingTabletMode());
+        if (writingTabletMode || mHasVerticalHotseat) {
             setGridSize(1, dp.numShownHotseatIcons);
         } else {
             setGridSize(dp.numShownHotseatIcons, 1);
+        }
+        
+        // Add app tray shortcut for writing tablet UI
+        if (writingTabletMode) {
+            addAppTrayShortcut();
         }
     }
 
@@ -363,6 +374,34 @@ public class Hotseat extends CellLayout implements Insettable {
      */
     public View getQsb() {
         return mQsb;
+    }
+
+    /**
+     * Add app tray shortcut to hotseat for writing tablet UI
+     */
+    public void addAppTrayShortcut() {
+        Context context = getContext();
+        ActivityContext activityContext = ActivityContext.lookupContext(context);
+        
+        // Create a BubbleTextView for the app tray shortcut
+        BubbleTextView appTrayView = new BubbleTextView(context);
+        appTrayView.setText(context.getString(R.string.app_tray_label));
+        appTrayView.setCompoundDrawablesWithIntrinsicBounds(null, 
+            context.getDrawable(R.drawable.ic_app_tray), null, null);
+        
+        // Set click listener to open all apps
+        appTrayView.setOnClickListener(v -> {
+            if (activityContext instanceof Launcher) {
+                Launcher launcher = (Launcher) activityContext;
+                launcher.getStateManager().goToState(LauncherState.ALL_APPS);
+            }
+        });
+        
+        // Add to the bottom of the hotseat
+        DeviceProfile dp = mActivity.getDeviceProfile();
+        int lastPosition = dp.numShownHotseatIcons - 1;
+        addViewToCellLayout(appTrayView, -1, 0, 
+            new CellLayout.LayoutParams(0, lastPosition, 1, 1));
     }
 
 }

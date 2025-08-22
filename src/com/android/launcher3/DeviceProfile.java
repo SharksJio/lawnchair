@@ -2127,6 +2127,7 @@ public class DeviceProfile {
      * the hotseat is on the bottom row.
      */
     public boolean isVerticalBarLayout() {
+
         // Always return true to keep hotseat on left vertical column
         return true;
     }
