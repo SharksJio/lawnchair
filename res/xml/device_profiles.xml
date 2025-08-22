@@ -24,6 +24,7 @@
         launcher:numFolderRows="2"
         launcher:numFolderColumns="3"
         launcher:numHotseatIcons="3"
+        launcher:numExtendedHotseatIcons="6"
         launcher:dbFile="launcher_3_by_3.db"
         launcher:defaultLayoutId="@xml/default_workspace_3x3"
         launcher:deviceCategory="phone" >
@@ -168,6 +169,7 @@
         launcher:numFolderRows="3"
         launcher:numFolderColumns="3"
         launcher:numHotseatIcons="6"
+        launcher:numExtendedHotseatIcons="6"
         launcher:numAllAppsColumns="6"
         launcher:isScalable="true"
         launcher:inlineNavButtonsEndSpacing="@dimen/taskbar_button_margin_6_5"
