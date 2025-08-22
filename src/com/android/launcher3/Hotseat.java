@@ -110,17 +110,15 @@ public class Hotseat extends CellLayout implements Insettable {
     }
 
     private void setUpBackground() {
-        if(!preferenceManager.getHotseatBG().get()) return;
-        
-        var bgColor = PreferenceExtensionsKt.firstBlocking(preferenceManager2.getHotseatBackgroundColor());
-        var transparency = preferenceManager.getHotseatBGAlpha().get();
+        // Force grey background regardless of preferences
+        var transparency = 80; // 80% opacity
         var alphaValue = (transparency * 255) / 100;
-        var baseColor = bgColor.getColorPreferenceEntry().getLightColor().invoke(mContext);
+        var baseColor = Color.GRAY; // Force grey color
         var finalColor = Color.argb(alphaValue, Color.red(baseColor), Color.green(baseColor), Color.blue(baseColor));
-        int insetHorizontalLeft = preferenceManager.getHotseatBGHorizontalInsetLeft().get();
-        int insetHorizontalRight = preferenceManager.getHotseatBGHorizontalInsetRight().get();
-        int insetVerticalTop = preferenceManager.getHotseatBGVerticalInsetTop().get();
-        int insetVerticalBottom = preferenceManager.getHotseatBGVerticalInsetBottom().get();
+        int insetHorizontalLeft = 0; // Default insets
+        int insetHorizontalRight = 0;
+        int insetVerticalTop = 0;
+        int insetVerticalBottom = 0;
         InsetDrawable bg = new InsetDrawable(DrawableTokens.BgCellLayout.resolve(getContext()),
                 insetHorizontalLeft, insetVerticalTop, insetHorizontalRight, insetVerticalBottom);
         bg.setTint(finalColor);
