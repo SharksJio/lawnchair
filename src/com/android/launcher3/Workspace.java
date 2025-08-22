@@ -734,20 +734,22 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
     }
 
     public void insertNewWorkspaceScreenBeforeEmptyScreen(int screenId) {
-        // Find the index to insert this view into. If the empty screen exists, then
-        // insert it before that.
-        int insertIndex = mScreenOrder.indexOf(EXTRA_EMPTY_SCREEN_ID);
-        if (insertIndex < 0) {
-            insertIndex = mScreenOrder.size();
-        }
-        insertNewWorkspaceScreen(screenId, insertIndex);
+        // Disable inserting new workspace screens - only allow single page
+        return;
     }
 
     public void insertNewWorkspaceScreen(int screenId) {
-        insertNewWorkspaceScreen(screenId, getChildCount());
+        // Disable inserting new workspace screens - only allow single page  
+        return;
     }
 
     public CellLayout insertNewWorkspaceScreen(int screenId, int insertIndex) {
+        // Only allow creation of the first screen (FIRST_SCREEN_ID = 0)
+        if (screenId != FIRST_SCREEN_ID) {
+            Log.w(TAG, "Preventing creation of additional screen with id " + screenId + ". Only single page allowed.");
+            return null;
+        }
+        
         if (mWorkspaceScreens.containsKey(screenId)) {
             Log.w(TAG, "Screen id " + screenId + " already exists, skipping insertion");
             return mWorkspaceScreens.get(screenId);
@@ -779,49 +781,8 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
     }
 
     private void addExtraEmptyScreenOnDrag(DragObject dragObject) {
-        boolean lastChildOnScreen = false;
-        boolean childOnFinalScreen = false;
-
-        if (mDragSourceInternal != null) {
-            int dragSourceChildCount = mDragSourceInternal.getChildCount();
-
-            // If the icon was dragged from Hotseat, there is no page pair
-            if (isTwoPanelEnabled() && !(mDragSourceInternal.getParent() instanceof Hotseat)) {
-                int pagePairScreenId = getScreenPair(getCellPosMapper().mapModelToPresenter(
-                        dragObject.dragInfo).screenId);
-                CellLayout pagePair = mWorkspaceScreens.get(pagePairScreenId);
-                dragSourceChildCount += pagePair.getShortcutsAndWidgets().getChildCount();
-            }
-
-            // When the drag view content is a LauncherAppWidgetHostView, we should
-            // increment the
-            // drag source child count by 1 because the widget in drag has been detached
-            // from its
-            // original parent, ShortcutAndWidgetContainer, and reattached to the DragView.
-            if (dragObject.dragView.getContentView() instanceof LauncherAppWidgetHostView) {
-                dragSourceChildCount++;
-            }
-
-            if (dragSourceChildCount == 1) {
-                lastChildOnScreen = true;
-            }
-            CellLayout cl = (CellLayout) mDragSourceInternal.getParent();
-            if (!FOLDABLE_SINGLE_PAGE.get() && getLeftmostVisiblePageForIndex(
-                    indexOfChild(cl)) == getLeftmostVisiblePageForIndex(getPageCount() - 1)) {
-                childOnFinalScreen = true;
-            }
-        }
-
-        // If this is the last item on the final screen
-        if (lastChildOnScreen && childOnFinalScreen) {
-            return;
-        }
-
-        forEachExtraEmptyPageId(extraEmptyPageId -> {
-            if (!mWorkspaceScreens.containsKey(extraEmptyPageId)) {
-                insertNewWorkspaceScreen(extraEmptyPageId);
-            }
-        });
+        // Disable adding extra empty screens - only allow single page
+        return;
     }
 
     /**
@@ -838,11 +799,8 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
      * two extra screens.
      **/
     public void addExtraEmptyScreens() {
-        forEachExtraEmptyPageId(extraEmptyPageId -> {
-            if (!mWorkspaceScreens.containsKey(extraEmptyPageId)) {
-                insertNewWorkspaceScreen(extraEmptyPageId);
-            }
-        });
+        // Disable adding extra empty screens - only allow single page
+        return;
     }
 
     /**
