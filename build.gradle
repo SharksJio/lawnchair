@@ -3,21 +3,34 @@ import com.android.build.gradle.api.AndroidBasePlugin
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-plugins {
-    id 'com.android.application' version "8.5.0"
-    id 'com.android.library' version "8.5.0" apply false
-    id 'com.android.test' version '8.5.0' apply false
-    id 'androidx.baselineprofile' version '1.4.0'
-    id 'org.jetbrains.kotlin.android' version "2.1.10"
-    id 'org.jetbrains.kotlin.plugin.compose' version "2.1.10"
-    id 'org.jetbrains.kotlin.plugin.parcelize' version "2.1.10"
-    id 'org.jetbrains.kotlin.plugin.serialization' version "2.1.10"
-    id "com.google.devtools.ksp" version "2.1.10-1.0.31"
-    id 'com.google.protobuf' version "0.9.5"
-    id 'app.cash.licensee' version "1.13.0"
-    id 'dev.rikka.tools.refine' version "4.4.0"
-    id 'com.diffplug.spotless' version '7.2.1'
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.4'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10'
+        classpath 'androidx.baselineprofile:baselineprofile-gradle-plugin:1.4.0'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.9.5'
+        classpath 'app.cash.licensee:licensee-gradle-plugin:1.13.0'
+        classpath 'dev.rikka.tools.refine:gradle-plugin:4.4.0'
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:7.2.1'
+        classpath 'com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.9.10-1.0.13'
+    }
 }
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-parcelize'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'androidx.baselineprofile'
+apply plugin: 'com.google.protobuf'
+apply plugin: 'app.cash.licensee'
+apply plugin: 'dev.rikka.tools.refine'
+apply plugin: 'com.diffplug.spotless'
 
 
 allprojects {
