@@ -392,6 +392,17 @@ public class ItemClickHandler {
     private static void startAppShortcutOrInfoActivity(View v, ItemInfo item, Launcher launcher) {
         TestLogging.recordEvent(
                 TestProtocol.SEQUENCE_MAIN, "start: startAppShortcutOrInfoActivity");
+        
+        // Check if this is an AppInfo item and we have a workspace with app view
+        if (item instanceof AppInfo) {
+            // Try to launch the app in the workspace app view area
+            if (launcher.getWorkspace() != null && launcher.getWorkspace().getWorkspaceScreenWithAppView() != null) {
+                launcher.getWorkspace().launchAppInWorkspace((AppInfo) item);
+                return; // Launch in workspace, don't start separate activity
+            }
+        }
+        
+        // Fall back to original behavior for other items or if workspace app view is not available
         Intent intent = item.getIntent();
         if (item instanceof ItemInfoWithIcon itemInfoWithIcon) {
             if ((itemInfoWithIcon.runtimeStatusFlags

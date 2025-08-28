@@ -656,12 +656,20 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
 
     @Override
     public void onViewAdded(View child) {
-        if (!(child instanceof CellLayout)) {
-            throw new IllegalArgumentException("A Workspace can only have CellLayout children.");
+        if (child instanceof WorkspaceScreenWithAppView) {
+            // Handle our new combined layout
+            WorkspaceScreenWithAppView screenWithAppView = (WorkspaceScreenWithAppView) child;
+            CellLayout cl = screenWithAppView.getWidgetArea();
+            cl.setOnInterceptTouchListener(this);
+            cl.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
+        } else if (child instanceof CellLayout) {
+            // Handle regular CellLayout (backward compatibility)
+            CellLayout cl = ((CellLayout) child);
+            cl.setOnInterceptTouchListener(this);
+            cl.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
+        } else {
+            throw new IllegalArgumentException("A Workspace can only have CellLayout or WorkspaceScreenWithAppView children.");
         }
-        CellLayout cl = ((CellLayout) child);
-        cl.setOnInterceptTouchListener(this);
-        cl.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
         super.onViewAdded(child);
     }
 
@@ -755,25 +763,19 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
             return mWorkspaceScreens.get(screenId);
         }
 
-        // Inflate the cell layout, but do not add it automatically so that we can get
-        // the newly
-        // created CellLayout.
-        DeviceProfile dp = mLauncher.getDeviceProfile();
-        CellLayout newScreen;
-        if (FOLDABLE_SINGLE_PAGE.get() && dp.isTwoPanels) {
-            newScreen = (CellLayout) LayoutInflater.from(getContext()).inflate(
-                    R.layout.workspace_screen_foldable, this, false /* attachToRoot */);
-        } else {
-            newScreen = (CellLayout) LayoutInflater.from(getContext()).inflate(
-                    R.layout.workspace_screen, this, false /* attachToRoot */);
-        }
+        // Create the new workspace screen with app view and widget area
+        WorkspaceScreenWithAppView newScreenWithAppView = new WorkspaceScreenWithAppView(getContext());
+        CellLayout newScreen = newScreenWithAppView.getWidgetArea();
         newScreen.setCellLayoutContainer(this);
 
+        // Store both the WorkspaceScreenWithAppView and CellLayout for later access
         mWorkspaceScreens.put(screenId, newScreen);
         mScreenOrder.add(insertIndex, screenId);
-        addView(newScreen, insertIndex);
+        
+        // Add the combined view to the workspace
+        addView(newScreenWithAppView, insertIndex);
         mStateTransitionAnimation.applyChildState(
-                mLauncher.getStateManager().getState(), newScreen, insertIndex);
+                mLauncher.getStateManager().getState(), newScreenWithAppView, insertIndex);
 
         updatePageScrollValues();
         updateCellLayoutMeasures();
@@ -3463,6 +3465,26 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
     public LauncherAppWidgetHostView getWidgetForAppWidgetId(final int appWidgetId) {
         return (LauncherAppWidgetHostView) getFirstMatch((info, v) -> (info instanceof LauncherAppWidgetInfo) &&
                 ((LauncherAppWidgetInfo) info).appWidgetId == appWidgetId);
+    }
+
+    /**
+     * Get the WorkspaceScreenWithAppView for launching applications
+     */
+    public WorkspaceScreenWithAppView getWorkspaceScreenWithAppView() {
+        if (getChildCount() > 0 && getChildAt(0) instanceof WorkspaceScreenWithAppView) {
+            return (WorkspaceScreenWithAppView) getChildAt(0);
+        }
+        return null;
+    }
+
+    /**
+     * Launch an application in the workspace app view area
+     */
+    public void launchAppInWorkspace(AppInfo appInfo) {
+        WorkspaceScreenWithAppView screenWithAppView = getWorkspaceScreenWithAppView();
+        if (screenWithAppView != null) {
+            screenWithAppView.launchAppInView(appInfo);
+        }
     }
 
     public View getFirstMatch(final ItemOperator operator) {

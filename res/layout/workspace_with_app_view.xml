@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2024 Lawnchair -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Upper area for application view -->
+    <FrameLayout
+        android:id="@+id/app_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent">
+        
+        <!-- Placeholder for launched applications -->
+        <TextView
+            android:id="@+id/app_view_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Tap an app to launch it here"
+            android:textSize="16sp"
+            android:textColor="@android:color/secondary_text_dark"
+            android:background="@android:color/transparent" />
+        
+    </FrameLayout>
+
+    <!-- Lower area reserved for widgets only -->
+    <com.android.launcher3.CellLayout
+        android:id="@+id/widget_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:minHeight="120dp"
+        android:hapticFeedbackEnabled="false"
+        launcher:containerType="workspace" />
+
+</LinearLayout>
