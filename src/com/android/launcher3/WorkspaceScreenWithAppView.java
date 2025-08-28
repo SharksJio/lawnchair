@@ -154,14 +154,9 @@ public class WorkspaceScreenWithAppView extends LinearLayout {
     }
     
     /**
-     * Custom CellLayoutContainer that only accepts widgets
+     * Custom CellLayoutContainer implementation for the widget area
      */
     private class WidgetOnlyCellLayoutContainer implements CellLayoutContainer {
-        
-        @Override
-        public boolean acceptsWidget() {
-            return true; // Only widgets are allowed
-        }
         
         @Override
         public int getCellLayoutId(CellLayout cellLayout) {
@@ -169,19 +164,18 @@ public class WorkspaceScreenWithAppView extends LinearLayout {
         }
         
         @Override
-        public CellLayout getCellLayoutForScreenId(int screenId) {
-            return mWidgetArea;
+        public int getCellLayoutIndex(CellLayout cellLayout) {
+            return 0; // Only one CellLayout in this container
         }
         
         @Override
-        public void beginDragShared(View child, DragSource source, DragOptions options) {
-            // Only allow dragging widgets
-            if (child.getTag() instanceof LauncherAppWidgetInfo) {
-                // Delegate to workspace
-                if (mLauncher.getWorkspace() != null) {
-                    mLauncher.getWorkspace().beginDragShared(child, source, options);
-                }
-            }
+        public int getPanelCount() {
+            return 1; // Only the widget area panel
+        }
+        
+        @Override
+        public String getPageDescription(int pageIndex) {
+            return "Widget area for placing widgets only";
         }
     }
     
