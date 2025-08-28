@@ -3471,8 +3471,12 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
      * Get the WorkspaceScreenWithAppView for launching applications
      */
     public WorkspaceScreenWithAppView getWorkspaceScreenWithAppView() {
-        if (getChildCount() > 0 && getChildAt(0) instanceof WorkspaceScreenWithAppView) {
-            return (WorkspaceScreenWithAppView) getChildAt(0);
+        try {
+            if (getChildCount() > 0 && getChildAt(0) instanceof WorkspaceScreenWithAppView) {
+                return (WorkspaceScreenWithAppView) getChildAt(0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error accessing WorkspaceScreenWithAppView", e);
         }
         return null;
     }
@@ -3481,9 +3485,16 @@ public class Workspace<T extends View & PageIndicator> extends PagedView<T>
      * Launch an application in the workspace app view area
      */
     public void launchAppInWorkspace(AppInfo appInfo) {
+        if (appInfo == null) {
+            Log.w(TAG, "Cannot launch app: AppInfo is null");
+            return;
+        }
+        
         WorkspaceScreenWithAppView screenWithAppView = getWorkspaceScreenWithAppView();
         if (screenWithAppView != null) {
             screenWithAppView.launchAppInView(appInfo);
+        } else {
+            Log.w(TAG, "WorkspaceScreenWithAppView not available, cannot launch app in workspace");
         }
     }
 

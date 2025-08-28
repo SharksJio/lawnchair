@@ -19,6 +19,7 @@ package com.android.launcher3;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -76,11 +77,16 @@ public class WorkspaceScreenWithAppView extends LinearLayout {
      * Launch an application in the app view area
      */
     public void launchAppInView(AppInfo appInfo) {
-        if (mAppViewContainer == null) return;
+        if (mAppViewContainer == null || appInfo == null) {
+            Log.w("WorkspaceScreenWithAppView", "Cannot launch app: container or appInfo is null");
+            return;
+        }
         
         try {
             // Hide placeholder
-            mAppViewPlaceholder.setVisibility(View.GONE);
+            if (mAppViewPlaceholder != null) {
+                mAppViewPlaceholder.setVisibility(View.GONE);
+            }
             
             // Clear any existing app view
             mAppViewContainer.removeAllViews();
@@ -91,19 +97,28 @@ public class WorkspaceScreenWithAppView extends LinearLayout {
                 // For now, we'll just show a simple text view with the app name
                 // In a full implementation, this would involve activity embedding
                 TextView appView = new TextView(getContext());
-                appView.setText("Running: " + appInfo.title);
+                appView.setText("Running: " + (appInfo.title != null ? appInfo.title : "Unknown App"));
                 appView.setTextSize(18);
                 appView.setGravity(android.view.Gravity.CENTER);
                 appView.setBackground(getContext().getDrawable(android.R.color.white));
                 appView.setPadding(16, 16, 16, 16);
                 
+                // Add click listener to clear the app view
+                appView.setOnClickListener(v -> clearAppView());
+                
                 mAppViewContainer.addView(appView);
+                
+                Log.d("WorkspaceScreenWithAppView", "Launched app in workspace: " + appInfo.title);
                 
                 // TODO: Implement actual app activity embedding here
                 // This would require using ActivityView or similar mechanism
+            } else {
+                Log.w("WorkspaceScreenWithAppView", "App intent is null for: " + appInfo.title);
+                showAppViewPlaceholder();
             }
         } catch (Exception e) {
             // Handle any launch errors
+            Log.e("WorkspaceScreenWithAppView", "Error launching app in workspace: " + appInfo.title, e);
             showAppViewPlaceholder();
         }
     }
@@ -168,5 +183,13 @@ public class WorkspaceScreenWithAppView extends LinearLayout {
                 }
             }
         }
+    }
+    
+    /**
+     * Check if an item can be placed in the widget area
+     */
+    public boolean canPlaceItem(ItemInfo itemInfo) {
+        // Only allow widgets in the widget area
+        return itemInfo instanceof LauncherAppWidgetInfo;
     }
 }
