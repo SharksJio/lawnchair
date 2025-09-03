@@ -336,26 +336,26 @@ public class CustomFeatureFlags implements FeatureFlags {
 
     @Override
     public boolean glanceableHubAllowKeyguardWhenDreaming() {
-        return getValue(Flags.FLAG_GLANCEABLE_HUB_ALLOW_KEYGUARD_WHEN_DREAMING,
-                FeatureFlags::glanceableHubAllowKeyguardWhenDreaming);
+        // Glance features are disabled by default
+        return false;
     }
 
     @Override
     public boolean glanceableHubFullscreenSwipe() {
-        return getValue(Flags.FLAG_GLANCEABLE_HUB_FULLSCREEN_SWIPE,
-                FeatureFlags::glanceableHubFullscreenSwipe);
+        // Glance features are disabled by default
+        return false;
     }
 
     @Override
     public boolean glanceableHubGestureHandle() {
-        return getValue(Flags.FLAG_GLANCEABLE_HUB_GESTURE_HANDLE,
-                FeatureFlags::glanceableHubGestureHandle);
+        // Glance features are disabled by default
+        return false;
     }
 
     @Override
     public boolean glanceableHubShortcutButton() {
-        return getValue(Flags.FLAG_GLANCEABLE_HUB_SHORTCUT_BUTTON,
-                FeatureFlags::glanceableHubShortcutButton);
+        // Glance features are disabled by default
+        return false;
     }
 
     @Override
@@ -998,10 +998,7 @@ public class CustomFeatureFlags implements FeatureFlags {
                 Flags.FLAG_FLOATING_MENU_OVERLAPS_NAV_BARS_FLAG,
                 Flags.FLAG_FLOATING_MENU_RADII_ANIMATION,
                 Flags.FLAG_GET_CONNECTED_DEVICE_NAME_UNSYNCHRONIZED,
-                Flags.FLAG_GLANCEABLE_HUB_ALLOW_KEYGUARD_WHEN_DREAMING,
-                Flags.FLAG_GLANCEABLE_HUB_FULLSCREEN_SWIPE,
-                Flags.FLAG_GLANCEABLE_HUB_GESTURE_HANDLE,
-                Flags.FLAG_GLANCEABLE_HUB_SHORTCUT_BUTTON,
+                // Glance feature flags removed - features are disabled by default
                 Flags.FLAG_HAPTIC_BRIGHTNESS_SLIDER,
                 Flags.FLAG_HAPTIC_VOLUME_SLIDER,
                 Flags.FLAG_HEARING_AIDS_QS_TILE_DIALOG,

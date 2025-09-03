@@ -66,10 +66,7 @@ public final class FeatureFlagsImpl implements FeatureFlags {
     private static boolean floatingMenuRadiiAnimation = true;
     private static boolean generatedPreviews = true;
     private static boolean getConnectedDeviceNameUnsynchronized = true;
-    private static boolean glanceableHubAllowKeyguardWhenDreaming = false;
-    private static boolean glanceableHubFullscreenSwipe = false;
-    private static boolean glanceableHubGestureHandle = false;
-    private static boolean glanceableHubShortcutButton = false;
+    // Glance feature variables removed - features are disabled by default
     private static boolean hapticBrightnessSlider = true;
     private static boolean hapticVolumeSlider = true;
     private static boolean hearingAidsQsTileDialog = true;
@@ -244,10 +241,7 @@ public final class FeatureFlagsImpl implements FeatureFlags {
         fixScreenshotActionDismissSystemWindows = foundPackage;
         generatedPreviews = foundPackage;
         getConnectedDeviceNameUnsynchronized = foundPackage;
-        glanceableHubAllowKeyguardWhenDreaming = foundPackage;
-        glanceableHubFullscreenSwipe = foundPackage;
-        glanceableHubGestureHandle = foundPackage;
-        glanceableHubShortcutButton = foundPackage;
+        // Glance features are disabled by default - removed initialization
         hapticBrightnessSlider = foundPackage;
         hapticVolumeSlider = foundPackage;
         hearingAidsQsTileDialog = foundPackage;
@@ -535,14 +529,7 @@ public final class FeatureFlagsImpl implements FeatureFlags {
                     properties.getBoolean(Flags.FLAG_GENERATED_PREVIEWS, true);
             getConnectedDeviceNameUnsynchronized =
                     properties.getBoolean(Flags.FLAG_GET_CONNECTED_DEVICE_NAME_UNSYNCHRONIZED, true);
-            glanceableHubAllowKeyguardWhenDreaming =
-                    properties.getBoolean(Flags.FLAG_GLANCEABLE_HUB_ALLOW_KEYGUARD_WHEN_DREAMING, false);
-            glanceableHubFullscreenSwipe =
-                    properties.getBoolean(Flags.FLAG_GLANCEABLE_HUB_FULLSCREEN_SWIPE, false);
-            glanceableHubGestureHandle =
-                    properties.getBoolean(Flags.FLAG_GLANCEABLE_HUB_GESTURE_HANDLE, false);
-            glanceableHubShortcutButton =
-                    properties.getBoolean(Flags.FLAG_GLANCEABLE_HUB_SHORTCUT_BUTTON, false);
+            // Glance features are disabled by default - removed property loading
             hapticBrightnessSlider =
                     properties.getBoolean(Flags.FLAG_HAPTIC_BRIGHTNESS_SLIDER, true);
             hapticVolumeSlider =
@@ -1593,65 +1580,29 @@ public final class FeatureFlagsImpl implements FeatureFlags {
     @Override
     
     public boolean glanceableHubAllowKeyguardWhenDreaming() {
-        if (isReadFromNew) {
-            if (!isCached) {
-                init();
-            }
-        } else {
-            if (!systemui_is_cached) {
-                load_overrides_systemui();
-            }
-        }
-        return glanceableHubAllowKeyguardWhenDreaming;
-
+        // Glance features are disabled by default
+        return false;
     }
 
     @Override
     
     public boolean glanceableHubFullscreenSwipe() {
-        if (isReadFromNew) {
-            if (!isCached) {
-                init();
-            }
-        } else {
-            if (!systemui_is_cached) {
-                load_overrides_systemui();
-            }
-        }
-        return glanceableHubFullscreenSwipe;
-
+        // Glance features are disabled by default
+        return false;
     }
 
     @Override
     
     public boolean glanceableHubGestureHandle() {
-        if (isReadFromNew) {
-            if (!isCached) {
-                init();
-            }
-        } else {
-            if (!systemui_is_cached) {
-                load_overrides_systemui();
-            }
-        }
-        return glanceableHubGestureHandle;
-
+        // Glance features are disabled by default
+        return false;
     }
 
     @Override
     
     public boolean glanceableHubShortcutButton() {
-        if (isReadFromNew) {
-            if (!isCached) {
-                init();
-            }
-        } else {
-            if (!systemui_is_cached) {
-                load_overrides_systemui();
-            }
-        }
-        return glanceableHubShortcutButton;
-
+        // Glance features are disabled by default
+        return false;
     }
 
     @Override
